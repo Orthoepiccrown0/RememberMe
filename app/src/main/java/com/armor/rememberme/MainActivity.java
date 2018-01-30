@@ -131,11 +131,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public static void callNoteEditor(){
-        if(mContext!=null) {
-
-
-        }
-    }
+//    public static void callNoteEditor(){
+//        if(mContext!=null) {
+//
+//
+//        }
+//    }
 
 }

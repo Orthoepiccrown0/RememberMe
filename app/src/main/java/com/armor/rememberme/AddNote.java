@@ -23,8 +23,7 @@ import java.util.Date;
 
 public class AddNote extends AppCompatActivity {
 
-    //dimasek
-    
+
     public String header_string;
     public String content_string;
     public String Data;
@@ -40,10 +39,11 @@ public class AddNote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         setTitle("Add note");
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.arg1==1)  Toast.makeText(AddNote.this,"Can't add your note",Toast.LENGTH_SHORT).show();
+                if (msg.arg1 == 1)
+                    Toast.makeText(AddNote.this, "Can't add your note", Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -59,27 +59,27 @@ public class AddNote extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         final String data = dateFormat.format(date);
-        if(header.getText().toString().trim()=="") Toast.makeText(this,"Make sure to fill every box",Toast.LENGTH_SHORT).show();
-        if(content.getText().toString().trim()=="") Toast.makeText(this,"Make sure to fill every box",Toast.LENGTH_SHORT).show();
+        if (header.getText().toString().trim().equals(""))
+            Toast.makeText(this, "Make sure to fill every box", Toast.LENGTH_SHORT).show();
+        if (content.getText().toString().trim().equals(""))
+            Toast.makeText(this, "Make sure to fill every box", Toast.LENGTH_SHORT).show();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try
-                {
-                    String urlp = "http://roccos.altervista.org/rest/addnote.php?header="+header.getText().toString()+"&content="+content.getText().toString()+"&"+
-                            "hcolor="+header_color+"&ccolor="+content_color+"&bcolor="+back_color+"&id="+User.iduser+"&date="+data+"&tipo="+User.type;
+                try {
+                    String urlp = "http://roccos.altervista.org/rest/addnote.php?header=" + header.getText().toString() + "&content=" + content.getText().toString() + "&" +
+                            "hcolor=" + header_color + "&ccolor=" + content_color + "&bcolor=" + back_color + "&id=" + User.iduser + "&date=" + data + "&tipo=" + User.type;
                     URL url = new URL(urlp);
                     // Read all the text returned by the server
                     BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                     String str;
-                    String final_object = "0 results";
+                    String final_object;
 
-
-                        final_object = in.readLine();
-                    if(!final_object.equals("New records created successfully")){
+                    final_object = in.readLine();
+                    if (!final_object.equals("New records created successfully")) {
                         Message msg = Message.obtain();
-                        msg.arg1 =1;
+                        msg.arg1 = 1;
                         handler.sendMessage(msg);
 
                     }
@@ -87,9 +87,9 @@ public class AddNote extends AppCompatActivity {
                     in.close();
                     AddNote.this.finish();
 
-                } catch (Exception  e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    e.toString();
+                    //e.toString();
                 }
             }
         }).start();
@@ -97,6 +97,6 @@ public class AddNote extends AppCompatActivity {
     }
 
     public void chooseColor(View view) {
-        Toast.makeText(this,"Not supported yet",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Not supported yet", Toast.LENGTH_SHORT).show();
     }
 }
