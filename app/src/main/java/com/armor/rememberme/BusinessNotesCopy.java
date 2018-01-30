@@ -154,7 +154,7 @@ public class BusinessNotesCopy extends Fragment {
         //return inflater.inflate(R.layout.fragment_notes, container, false);
         View RootView = inflater.inflate(R.layout.fragment_notes, container, false);
 
-        recyclerview = (RecyclerView) RootView.findViewById(R.id.recycler_view);
+        recyclerview = RootView.findViewById(R.id.recycler_view);
         //tv.setText("HI");
         loadCards();
         return RootView;

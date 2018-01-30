@@ -53,7 +53,7 @@ public class RANotes extends RecyclerView.Adapter<RANotes.MyViewHolder>{
                 callEditor(holder.overflow);
             }
         });
-        holder.overflow.setContentDescription((CharSequence) item.getnId());
+        holder.overflow.setContentDescription(item.getnId());
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,8 +106,8 @@ public class RANotes extends RecyclerView.Adapter<RANotes.MyViewHolder>{
         String idNote;
         public MyViewHolder(View itemView) {
             super(itemView);
-            header = (TextView) itemView.findViewById(R.id.header);
-            content = (TextView) itemView.findViewById(R.id.content);
+            header = itemView.findViewById(R.id.header);
+            content = itemView.findViewById(R.id.content);
             card = itemView.findViewById(R.id.item_card);
             overflow = itemView.findViewById(R.id.overflow);
 

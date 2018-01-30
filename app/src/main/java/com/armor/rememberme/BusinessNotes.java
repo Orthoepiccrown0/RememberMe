@@ -131,7 +131,7 @@ public class BusinessNotes extends Fragment {
         //return inflater.inflate(R.layout.fragment_notes, container, false);
         View RootView = inflater.inflate(R.layout.fragment_notes, container, false);
 
-        recyclerview = (RecyclerView) RootView.findViewById(R.id.recycler_view);
+        recyclerview = RootView.findViewById(R.id.recycler_view);
         mFloatingActionButton = RootView.findViewById(R.id.fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
