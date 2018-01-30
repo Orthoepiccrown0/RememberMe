@@ -23,7 +23,8 @@ import java.util.Date;
 
 public class AddNote extends AppCompatActivity {
 
-
+    //dimasek
+    
     public String header_string;
     public String content_string;
     public String Data;
