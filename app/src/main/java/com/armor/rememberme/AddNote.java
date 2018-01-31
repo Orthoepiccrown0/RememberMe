@@ -52,7 +52,7 @@ public class AddNote extends AppCompatActivity {
 
         final EditText header = findViewById(R.id.add_header_box);
         final EditText content = findViewById(R.id.add_content_box);
-
+        //123
         final String content_color = "000000";
         final String header_color = "000000";
         final String back_color = "ffffff";
