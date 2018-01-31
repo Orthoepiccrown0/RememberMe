@@ -53,9 +53,9 @@ public class AddNote extends AppCompatActivity {
         final EditText header = findViewById(R.id.add_header_box);
         final EditText content = findViewById(R.id.add_content_box);
 
-        final String content_color = "Black";
-        final String header_color = "Black";
-        final String back_color = "White";
+        final String content_color = "000000";
+        final String header_color = "000000";
+        final String back_color = "ffffff";
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         final String data = dateFormat.format(date);
