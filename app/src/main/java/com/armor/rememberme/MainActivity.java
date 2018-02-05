@@ -2,6 +2,7 @@ package com.armor.rememberme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -121,7 +122,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.personal_notes) {
             fragment = new PersonalNotes();
         } else if (id == R.id.logout) {
-
+            DataHelper helper = new DataHelper(this);
+            SQLiteDatabase db = helper.getReadableDatabase();
+            db.execSQL("DELETE FROM Login");
+            Intent intent = new Intent(this, Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         }
 
         if(fragment!=null) {

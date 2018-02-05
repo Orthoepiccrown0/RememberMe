@@ -1,6 +1,8 @@
 package com.armor.rememberme;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -32,49 +34,30 @@ public class Login extends AppCompatActivity {
                 if(msg.arg1==1)Toast.makeText(Login.this, "Check username or password",Toast.LENGTH_SHORT).show();
             }
         };
+        autoLogin();
+    }
+
+    private void autoLogin() {
+        DataHelper helper = new DataHelper(this);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.query("Login",new String[]{"Username", "Password"},null,null,null,null,null);
+
+        if(cursor.moveToFirst()){
+            String Username = cursor.getString(0);
+            String Password = cursor.getString(1);
+            execLogin(Username,Password);
+        }
     }
 
     public void tryLogin(View view) {
-        final EditText username  =findViewById(R.id.usernamebox);
-        final EditText password  =findViewById(R.id.passwordbox);
-        if(!username.getText().toString().trim().equals("")&&!username.getText().toString().trim().equals(""))
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try
-                {
-                    URL url = new URL("http://roccos.altervista.org/rest/login.php?username="+username.getText().toString()+"&password="+password.getText().toString()+"");
-                    // Read all the text returned by the server
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String str;
-                    String final_object = "0 results";
-                    JSONObject myJson=null;
-                    boolean passed = false;
-                    while ((str = in.readLine()) != null)
-                        final_object = str;
-                    if(!(final_object.equals("0 results"))){
-                        myJson = new JSONObject(final_object);
-                        User.iduser = myJson.getString("id");
-                        User.Name = myJson.getString("name");
-                        User.username = myJson.getString("username");
-                        passed = true;
-                    }else{
-                        Message msg = Message.obtain();
-                        msg.arg1=1;
-                        handler.sendMessage(msg);
-                    }
+        final EditText usernameE  =findViewById(R.id.usernamebox);
+        final EditText passwordE  =findViewById(R.id.passwordbox);
+        String username = usernameE.getText().toString().trim();
+        String password = passwordE.getText().toString().trim();
 
-                    in.close();
-                    if(passed){
-                        Intent intent = new Intent(Login.this,MainActivity.class);
-                        startActivity(intent);
-                    }
-                } catch (Exception  e) {
-                    e.printStackTrace();
-                    e.toString();
-                }
-            }
-        }).start();
+        if(!username.equals("")&&!password.equals(""))
+            execLogin(username,password);
         else{
             Toast.makeText(this, "Compile all fields",Toast.LENGTH_SHORT).show();
         }
@@ -100,6 +83,9 @@ public class Login extends AppCompatActivity {
                         User.iduser = myJson.getString("id");
                         User.Name = myJson.getString("name");
                         User.username = myJson.getString("username");
+                        DataHelper helper = new DataHelper(Login.this);
+                        SQLiteDatabase db = helper.getReadableDatabase();
+                        DataHelper.insertUser(db,User.username,myJson.getString("password"));
                         passed = true;
                     }
 
@@ -119,5 +105,48 @@ public class Login extends AppCompatActivity {
     public void tryRegister(View view){
         Intent intent = new Intent(Login.this,Register.class);
         startActivity(intent);
+    }
+
+    private void execLogin(final String user,final String pass){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                {
+                    URL url = new URL("http://roccos.altervista.org/rest/login.php?username="+user+"&password="+pass+"");
+                    // Read all the text returned by the server
+                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                    String str;
+                    String final_object = "0 results";
+                    JSONObject myJson=null;
+                    boolean passed = false;
+                    while ((str = in.readLine()) != null)
+                        final_object = str;
+                    if(!(final_object.equals("0 results"))){
+                        myJson = new JSONObject(final_object);
+                        User.iduser = myJson.getString("id");
+                        User.Name = myJson.getString("name");
+                        User.username = myJson.getString("username");
+                        DataHelper helper = new DataHelper(Login.this);
+                        SQLiteDatabase db = helper.getReadableDatabase();
+                        DataHelper.insertUser(db,User.username,myJson.getString("password"));
+                        passed = true;
+                    }else{
+                        Message msg = Message.obtain();
+                        msg.arg1=1;
+                        handler.sendMessage(msg);
+                    }
+
+                    in.close();
+                    if(passed){
+                        Intent intent = new Intent(Login.this,MainActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (Exception  e) {
+                    e.printStackTrace();
+                    e.toString();
+                }
+            }
+        }).start();
     }
 }

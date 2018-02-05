@@ -1,6 +1,7 @@
 package com.armor.rememberme;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +73,9 @@ public class Register extends AppCompatActivity {
                                         User.iduser = myJson.getString("id");
                                         User.Name = myJson.getString("name");
                                         User.username = myJson.getString("username");
+                                        DataHelper helper = new DataHelper(Register.this);
+                                        SQLiteDatabase db = helper.getReadableDatabase();
+                                        DataHelper.insertUser(db,User.username,myJson.getString("password"));
                                         passed = true;
                                     }
 
