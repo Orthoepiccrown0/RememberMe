@@ -37,14 +37,8 @@ public class BusinessNotes extends Fragment {
     boolean parse_passed = false;
 
     public BusinessNotes() {
-        // Required empty public constructor
     }
 
-
-    public static BusinessNotes newInstance(String param1, String param2) {
-        BusinessNotes fragment = new BusinessNotes();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
