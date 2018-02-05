@@ -20,9 +20,9 @@ public class EditNote extends AppCompatActivity {
     public String header_string;
     public String content_string;
     public String Data;
-    public String ccolor= "Black";
-    public String hcolor= "Black";
-    public String bcolor= "White";
+    public String ccolor= "000000";
+    public String hcolor= "000000";
+    public String bcolor= "ffffff";
 
     public Handler handler;
 
