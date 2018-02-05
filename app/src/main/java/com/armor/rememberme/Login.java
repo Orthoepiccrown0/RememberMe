@@ -92,7 +92,9 @@ public class Login extends AppCompatActivity {
                     in.close();
                     if(passed){
                         Intent intent = new Intent(Login.this,MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     }
                 } catch (Exception  e) {
                     e.printStackTrace();
@@ -140,6 +142,8 @@ public class Login extends AppCompatActivity {
                     in.close();
                     if(passed){
                         Intent intent = new Intent(Login.this,MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        finish();
                         startActivity(intent);
                     }
                 } catch (Exception  e) {

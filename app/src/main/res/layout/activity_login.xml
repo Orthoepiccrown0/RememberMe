@@ -45,30 +45,32 @@
 
     <Button
         android:id="@+id/signinB"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="tryLogin"
         android:text="Sign in"
         android:textColor="@android:color/background_light"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/passwordbox"
+        app:layout_constraintStart_toStartOf="@+id/passwordbox"
         app:layout_constraintTop_toBottomOf="@+id/passwordbox" />
 
     <Button
         android:id="@+id/registerB"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="tryRegister"
         android:text="Register"
         android:textColor="@android:color/background_light"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordbox" />
+        app:layout_constraintEnd_toEndOf="@+id/signinB"
+        app:layout_constraintStart_toStartOf="@+id/signinB"
+        app:layout_constraintTop_toBottomOf="@+id/signinB" />
 
     <Button
         android:id="@+id/button"
@@ -81,6 +83,7 @@
         android:onClick="testLogin"
         android:text="Test login"
         android:textColor="@android:color/background_light"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -52,10 +53,15 @@ public class BusinessNotes extends Fragment {
 
 
         if (!items.isEmpty()) {
+            TextView emptynotes = getActivity().findViewById(R.id.emptynotes);
+            emptynotes.setVisibility(View.INVISIBLE);
             adapter = new RANotes(getActivity(), items);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recyclerview.setLayoutManager(mLayoutManager);
             recyclerview.setAdapter(adapter);
+        } else {
+            TextView emptynotes = getActivity().findViewById(R.id.emptynotes);
+            emptynotes.setVisibility(View.VISIBLE);
         }
     }
 

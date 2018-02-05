@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -33,7 +34,8 @@ public class PersonalNotes extends Fragment {
     List<Note> items = new ArrayList<>();
     List<JSONObject> jsonObjects = new ArrayList<>();
     Handler handler;
-    boolean parse_passed= false;
+    boolean parse_passed = false;
+
     public PersonalNotes() {
         // Required empty public constructor
     }
@@ -56,71 +58,75 @@ public class PersonalNotes extends Fragment {
 
 
         if (!items.isEmpty()) {
+            TextView emptynotes = getActivity().findViewById(R.id.emptynotes);
+            emptynotes.setVisibility(View.INVISIBLE);
             adapter = new RANotes(getActivity(), items);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recyclerview.setLayoutManager(mLayoutManager);
             recyclerview.setAdapter(adapter);
+        } else {
+            TextView emptynotes = getActivity().findViewById(R.id.emptynotes);
+            emptynotes.setVisibility(View.VISIBLE);
         }
     }
 
-    public void loadItems(){
+    public void loadItems() {
 
-                try
-                {
-                    parse_passed = false;
-                    List<String> objects = new ArrayList<>();
-                    URL url = new URL("https://roccos.altervista.org/rest/loadnotes.php?idcliente="+User.iduser+"&tipo=2");
-                    // Read all the text returned by the server
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String str;
-                    String final_object = "";
+        try {
+            parse_passed = false;
+            List<String> objects = new ArrayList<>();
+            URL url = new URL("https://roccos.altervista.org/rest/loadnotes.php?idcliente=" + User.iduser + "&tipo=2");
+            // Read all the text returned by the server
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String str;
+            String final_object = "";
 
-                    //boolean passed = false;
-                    while ((str = in.readLine()) != null)
-                        final_object += str;
+            //boolean passed = false;
+            while ((str = in.readLine()) != null)
+                final_object += str;
 
-                    if (final_object != "") {
-                        boolean opened = true;
-                        int startpos = 0;
-                        int endpos = 0;
-                        char[] charArray = final_object.toCharArray();
-                        for (int i = 1; i < final_object.length() - 1; i++)
-                        {
+            if (final_object != "") {
+                boolean opened = true;
+                int startpos = 0;
+                int endpos = 0;
+                char[] charArray = final_object.toCharArray();
+                for (int i = 1; i < final_object.length() - 1; i++) {
 
-                            if (charArray[i] == '{') { opened = true; startpos = i; }
-                            if (charArray[i] == '}')
-                            {
-                                opened = false; endpos = i;
-                            }
-
-                            if (opened == false)
-                            {
-                                String tmp = "";
-                                for (int j = startpos; j <= endpos; j++)
-                                {
-                                    tmp += charArray[j];
-                                }
-                                objects.add(tmp);
-                                opened = true;
-                            }
-                        }
-
+                    if (charArray[i] == '{') {
+                        opened = true;
+                        startpos = i;
                     }
-                    parseJsonObjects(objects);
-                    parseNotes();
-                    in.close();
-                    parse_passed = true;
-                    Message msg = Message.obtain();
-                    msg.arg1 = 0;
-                    handler.sendMessage(msg);
+                    if (charArray[i] == '}') {
+                        opened = false;
+                        endpos = i;
+                    }
+
+                    if (opened == false) {
+                        String tmp = "";
+                        for (int j = startpos; j <= endpos; j++) {
+                            tmp += charArray[j];
+                        }
+                        objects.add(tmp);
+                        opened = true;
+                    }
+                }
+
+            }
+            parseJsonObjects(objects);
+            parseNotes();
+            in.close();
+            parse_passed = true;
+            Message msg = Message.obtain();
+            msg.arg1 = 0;
+            handler.sendMessage(msg);
                     /*if(passed){
                         Intent intent = new Intent(Login.this,MainActivity.class);
                         startActivity(intent);
                     }*/
-                } catch (Exception  e) {
-                    e.printStackTrace();
-                    //e.toString();
-                }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //e.toString();
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -176,11 +182,11 @@ public class PersonalNotes extends Fragment {
             }
         }).start();
 
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.arg1==0)
-                loadCards();
+                if (msg.arg1 == 0)
+                    loadCards();
             }
 
         };
@@ -191,29 +197,34 @@ public class PersonalNotes extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
 
-    private void parseJsonObjects(List<String> objects){
+    private void parseJsonObjects(List<String> objects) {
         jsonObjects.clear();
         try {
             for (String str : objects) {
                 jsonObjects.add(new JSONObject(str));
             }
-        }catch (Exception ex){ex.printStackTrace();}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    private void parseNotes(){
+    private void parseNotes() {
         items.clear();
         try {
-            for (JSONObject obj: jsonObjects) {
+            for (JSONObject obj : jsonObjects) {
                 String id = obj.getString("idNota");
                 String content = obj.getString("content");
                 String header = obj.getString("header");
                 String content_color = obj.getString("content_color");
                 String header_color = obj.getString("header_color");
                 String back_color = obj.getString("back_color");
-                items.add(new Note(id,content,header,content_color,header_color,back_color));
+                items.add(new Note(id, content, header, content_color, header_color, back_color));
             }
-        }catch (Exception ex){ex.printStackTrace();}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
