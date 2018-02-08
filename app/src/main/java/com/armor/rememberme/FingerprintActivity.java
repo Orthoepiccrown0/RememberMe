@@ -3,10 +3,13 @@ package com.armor.rememberme;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
@@ -14,7 +17,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
@@ -37,14 +45,20 @@ public class FingerprintActivity extends AppCompatActivity {
     private Cipher cipher;
     private TextView textView;
 
+    public String Username;
+    public String Password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint);
-
+        getSupportActionBar().setElevation(0);
         // Initializing both Android Keyguard Manager and Fingerprint Manager
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+
+        Username = getIntent().getStringExtra("username");
+        Password = getIntent().getStringExtra("password");
 
         textView = (TextView) findViewById(R.id.errorText);
 
@@ -131,5 +145,45 @@ public class FingerprintActivity extends AppCompatActivity {
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
+    }
+
+    public void execLogin(final String user, final String pass) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("http://roccos.altervista.org/rest/login.php?username=" + user + "&password=" + pass + "");
+                    // Read all the text returned by the server
+                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                    String str;
+                    String final_object = "0 results";
+                    JSONObject myJson = null;
+                    boolean passed = false;
+                    while ((str = in.readLine()) != null)
+                        final_object = str;
+                    if (!(final_object.equals("0 results"))) {
+                        myJson = new JSONObject(final_object);
+                        User.iduser = myJson.getString("id");
+                        User.Name = myJson.getString("name");
+                        User.username = myJson.getString("username");
+                        DataHelper helper = new DataHelper(FingerprintActivity.this);
+                        SQLiteDatabase db = helper.getReadableDatabase();
+                        DataHelper.insertUser(db, User.username, myJson.getString("password"));
+                        passed = true;
+                    }
+
+                    in.close();
+                    if (passed) {
+                        Intent intent = new Intent(FingerprintActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        finish();
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    e.toString();
+                }
+            }
+        }).start();
     }
 }

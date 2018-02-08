@@ -31,15 +31,17 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        getSupportActionBar().setElevation(0);
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.arg1==1)Toast.makeText(Login.this, "Check username or password",Toast.LENGTH_SHORT).show();
+                if (msg.arg1 == 1)
+                    Toast.makeText(Login.this, "Check username or password", Toast.LENGTH_SHORT).show();
             }
         };
         autoLogin();
+        setContentView(R.layout.activity_login);
+        getSupportActionBar().setElevation(0);
+
     }
 
     private void autoLogin() {
@@ -55,30 +57,31 @@ public class Login extends AppCompatActivity {
             Password = cursor.getString(1);
             if (secured) {
                 Intent intent = new Intent(Login.this, FingerprintActivity.class);
-                startActivityForResult(intent, 1);
+                intent.putExtra("username", Username);
+                intent.putExtra("password", Password);
+                startActivity(intent);
+                finish();
+
             } else {
                 execLogin(Username, Password);
             }
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK)
-                execLogin(Username, Password);
-        }
-    }
 
     public void tryLogin(View view) {
         final EditText usernameE  =findViewById(R.id.usernamebox);
         final EditText passwordE  =findViewById(R.id.passwordbox);
         String username = usernameE.getText().toString().trim();
         String password = passwordE.getText().toString().trim();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
-        if(!username.equals("")&&!password.equals(""))
-            execLogin(username,password);
-        else{
+        if (!username.equals("") && !password.equals("")) {
+            editor.putBoolean("secure_switch", false);
+            editor.apply();
+            execLogin(username, password);
+        } else {
             Toast.makeText(this, "Compile all fields",Toast.LENGTH_SHORT).show();
         }
     }
