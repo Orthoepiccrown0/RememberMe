@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
@@ -39,14 +38,13 @@ import javax.crypto.SecretKey;
 
 public class FingerprintActivity extends AppCompatActivity {
 
-    private KeyStore keyStore;
     // Variable used for storing the key in the Android Keystore container
     private static final String KEY_NAME = "RemebmerMeSecure";
-    private Cipher cipher;
-    private TextView textView;
-
     public String Username;
     public String Password;
+    private KeyStore keyStore;
+    private Cipher cipher;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
