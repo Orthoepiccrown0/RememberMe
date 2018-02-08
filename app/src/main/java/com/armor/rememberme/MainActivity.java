@@ -2,10 +2,12 @@ package com.armor.rememberme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         TextView name = findViewById(R.id.name);
         name.setText("Hello, "+User.Name);
 
+
         TextView username = findViewById(R.id.username);
         username.setText(User.username);
 
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
             return true;
         }
 

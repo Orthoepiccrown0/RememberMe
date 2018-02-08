@@ -1,10 +1,12 @@
 package com.armor.rememberme;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -44,6 +46,8 @@ public class Login extends AppCompatActivity {
         Cursor cursor = db.query("Login",new String[]{"Username", "Password"},null,null,null,null,null);
 
         if(cursor.moveToFirst()){
+
+
             String Username = cursor.getString(0);
             String Password = cursor.getString(1);
             execLogin(Username,Password);
