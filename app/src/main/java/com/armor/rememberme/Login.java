@@ -1,5 +1,6 @@
 package com.armor.rememberme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -25,6 +26,8 @@ import java.net.URL;
 public class Login extends AppCompatActivity {
 
     Handler handler;
+    private String Username;
+    private String Password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +49,24 @@ public class Login extends AppCompatActivity {
         Cursor cursor = db.query("Login",new String[]{"Username", "Password"},null,null,null,null,null);
 
         if(cursor.moveToFirst()){
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Login.this);
+            boolean secured = sharedPref.getBoolean("secure_switch", false);
+            Username = cursor.getString(0);
+            Password = cursor.getString(1);
+            if (secured) {
+                Intent intent = new Intent(Login.this, FingerprintActivity.class);
+                startActivityForResult(intent, 1);
+            } else {
+                execLogin(Username, Password);
+            }
+        }
+    }
 
-
-            String Username = cursor.getString(0);
-            String Password = cursor.getString(1);
-            execLogin(Username,Password);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK)
+                execLogin(Username, Password);
         }
     }
 

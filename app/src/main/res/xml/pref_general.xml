@@ -4,9 +4,9 @@
         android:key="pref_key_storage_settings">
         <SwitchPreference
             android:defaultValue="false"
-            android:key="example_switch"
-            android:summary="@string/pref_description_social_recommendations"
-            android:title="@string/pref_title_social_recommendations" />
+            android:key="secure_switch"
+            android:summary="Your device should have at least one fingerprint registered"
+            android:title="Secure your notes by fingerprint" />
 
     </PreferenceCategory>
     <!--<EditTextPreference
