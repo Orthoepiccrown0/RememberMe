@@ -1,5 +1,8 @@
 package com.armor.rememberme;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +10,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,9 +28,9 @@ public class EditNote extends AppCompatActivity {
     public String header_string;
     public String content_string;
     public String Data;
-    public String ccolor= "000000";
-    public String hcolor= "000000";
-    public String bcolor= "ffffff";
+    public String content_color = "000000";
+    public String header_color = "000000";
+    public String back_color = "ffffff";
 
     public Handler handler;
 
@@ -44,15 +52,37 @@ public class EditNote extends AppCompatActivity {
              header.setText(User.note2edit.getHeader());
              content.setText(User.note2edit.getContent());
 
-             ccolor = User.note2edit.getContent_color();
-             hcolor = User.note2edit.getHeader_color();
-             bcolor = User.note2edit.getBack_color();
+            content_color = User.note2edit.getContent_color();
+            header_color = User.note2edit.getHeader_color();
+            back_color = User.note2edit.getBack_color();
 
+            header.setTextColor(Color.parseColor("#" + header_color));
+            content.setTextColor(Color.parseColor("#" + content_color));
+
+            //getWindow().setNavigationBarColor(Color.parseColor("#"+back_color));
+            if (!back_color.toLowerCase().equals("ffffff")) {
+                getWindow().setStatusBarColor(Color.parseColor("#" + back_color));
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#" + back_color)));
+            }
 
         }else{
             finish();
         }
     }
+
+    public void updateColors() {
+        EditText header = findViewById(R.id.edit_header_box);
+        EditText content = findViewById(R.id.edit_content_box);
+        header.setTextColor(Color.parseColor("#" + header_color));
+        content.setTextColor(Color.parseColor("#" + content_color));
+
+        //getWindow().setNavigationBarColor(Color.parseColor("#"+back_color));
+        if (!back_color.toLowerCase().equals("ffffff")) {
+            getWindow().setStatusBarColor(Color.parseColor("#" + back_color));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#" + back_color)));
+        }
+    }
+
     public void trySave(View view) {
 
         final EditText header = findViewById(R.id.edit_header_box);
@@ -71,7 +101,7 @@ public class EditNote extends AppCompatActivity {
                 try
                 {
                     String urlp = "http://roccos.altervista.org/rest/updatenote.php?header="+header.getText().toString()+"&content="+content.getText().toString()+"&"+
-                            "header_color="+hcolor+"&content_color="+ccolor+"&bcolor="+bcolor+"&id="+User.note2edit.getnId()+"&date="+data;
+                            "header_color=" + header_color + "&content_color=" + content_color + "&bcolor=" + back_color + "&id=" + User.note2edit.getnId() + "&date=" + data;
                     URL url = new URL(urlp);
                     // Read all the text returned by the server
                     BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -101,5 +131,95 @@ public class EditNote extends AppCompatActivity {
 
     public void chooseColor(View view) {
         Toast.makeText(this,"Not supported yet",Toast.LENGTH_SHORT).show();
+    }
+
+    public void chooseCColor(View view) {
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose content color")
+                .initialColor(Color.parseColor("#" + content_color))
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        //toast("onColorSelected: 0x" + Integer.toHexString(selectedColor));
+
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        content_color = String.format("%06X", (0xFFFFFF & selectedColor));
+                        updateColors();
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+    }
+
+    public void chooseBColor(View view) {
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose background color")
+                .initialColor(Color.parseColor("#" + back_color))
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        //toast("onColorSelected: 0x" + Integer.toHexString(selectedColor));
+
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        back_color = String.format("%06X", (0xFFFFFF & selectedColor));
+                        updateColors();
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+    }
+
+    public void chooseHColor(View view) {
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose header color")
+                .initialColor(Color.parseColor("#" + header_color))
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        //toast("onColorSelected: 0x" + Integer.toHexString(selectedColor));
+
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        header_color = String.format("%06X", (0xFFFFFF & selectedColor));
+                        updateColors();
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
     }
 }
