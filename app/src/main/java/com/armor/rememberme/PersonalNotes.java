@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -85,34 +86,13 @@ public class PersonalNotes extends Fragment {
             while ((str = in.readLine()) != null)
                 final_object += str;
 
-            if (final_object != "") {
-                boolean opened = true;
-                int startpos = 0;
-                int endpos = 0;
-                char[] charArray = final_object.toCharArray();
-                for (int i = 1; i < final_object.length() - 1; i++) {
 
-                    if (charArray[i] == '{') {
-                        opened = true;
-                        startpos = i;
-                    }
-                    if (charArray[i] == '}') {
-                        opened = false;
-                        endpos = i;
-                    }
-
-                    if (opened == false) {
-                        String tmp = "";
-                        for (int j = startpos; j <= endpos; j++) {
-                            tmp += charArray[j];
-                        }
-                        objects.add(tmp);
-                        opened = true;
-                    }
-                }
-
+            JSONArray jarray = new JSONArray(final_object);
+            jsonObjects.clear();
+            for (int i = 0; i < jarray.length(); i++) {
+                jsonObjects.add(jarray.getJSONObject(i));
             }
-            parseJsonObjects(objects);
+
             parseNotes();
             in.close();
             parse_passed = true;
@@ -197,16 +177,6 @@ public class PersonalNotes extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
 
-    private void parseJsonObjects(List<String> objects) {
-        jsonObjects.clear();
-        try {
-            for (String str : objects) {
-                jsonObjects.add(new JSONObject(str));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     private void parseNotes() {
         items.clear();

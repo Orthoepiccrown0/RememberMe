@@ -30,16 +30,16 @@
 
         <TextView
             android:id="@+id/content"
-            android:text="Content"
-            android:paddingLeft="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/header"
             android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
             android:paddingTop="8dp"
+            android:text="Content"
+            android:textAlignment="textStart"
             android:textSize="14dp"
-            android:textStyle="normal"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            />
+            android:textStyle="normal" />
 
         <ImageView
             android:id="@+id/overflow"
