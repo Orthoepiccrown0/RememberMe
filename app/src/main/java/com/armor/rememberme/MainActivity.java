@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity
 
 
         Random rnd = new Random();
-        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        // int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        int color = Color.argb(255, 59, 89, 152);
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(User.Name.charAt(0)+"", color);
         ImageView avatar = findViewById(R.id.avatar);
