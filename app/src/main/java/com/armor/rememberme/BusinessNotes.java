@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,7 @@ public class BusinessNotes extends Fragment {
             emptynotes.setVisibility(View.INVISIBLE);
             adapter = new RANotes(getActivity(), items);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            //RecyclerView.LayoutManager mLayoutManager = new StaggeredGridLayoutManager(2,1 );
             recyclerview.setLayoutManager(mLayoutManager);
             recyclerview.setAdapter(adapter);
         } else {
