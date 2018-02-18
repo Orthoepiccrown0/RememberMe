@@ -57,7 +57,7 @@ public class PersonalNotes extends Fragment {
     private void loadCards() {
         //recyclerview = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
-
+        int i = 0;
         if (!items.isEmpty()) {
             TextView emptynotes = getActivity().findViewById(R.id.emptynotes);
             emptynotes.setVisibility(View.INVISIBLE);
@@ -86,27 +86,25 @@ public class PersonalNotes extends Fragment {
             while ((str = in.readLine()) != null)
                 final_object += str;
 
+            if (!final_object.equals("0 results")) {
+                JSONArray jarray = new JSONArray(final_object);
+                jsonObjects.clear();
+                for (int i = 0; i < jarray.length(); i++) {
+                    jsonObjects.add(jarray.getJSONObject(i));
+                }
 
-            JSONArray jarray = new JSONArray(final_object);
-            jsonObjects.clear();
-            for (int i = 0; i < jarray.length(); i++) {
-                jsonObjects.add(jarray.getJSONObject(i));
+                parseNotes();
+                in.close();
+                parse_passed = true;
             }
-
-            parseNotes();
-            in.close();
-            parse_passed = true;
             Message msg = Message.obtain();
             msg.arg1 = 0;
             handler.sendMessage(msg);
-                    /*if(passed){
-                        Intent intent = new Intent(Login.this,MainActivity.class);
-                        startActivity(intent);
-                    }*/
+
         } catch (Exception e) {
             e.printStackTrace();
-            //e.toString();
         }
+
     }
 
     @SuppressLint("HandlerLeak")
