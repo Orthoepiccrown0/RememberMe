@@ -92,7 +92,7 @@ public class Login extends AppCompatActivity {
             public void run() {
                 try
                 {
-                    URL url = new URL("http://roccos.altervista.org/rest/login.php?username=beer&password=123");
+                    URL url = new URL("https://roccos.altervista.org/rest/login.php?username=beer&password=123");
                     // Read all the text returned by the server
                     BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                     String str;
